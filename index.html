@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aylık Eğlenceli Başarı Zinciri - Yazdırılabilir</title>
+    <title>Aylık Eğlenceli Başarı Zinciri - 2 Sayfa Yazdırılabilir</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
         /* A4 Yatay Kağıt Ayarı */
         @page {
             size: A4 landscape;
-            margin: 5mm; /* Sayfayı tam doldurması için kenar boşlukları iyice azaltıldı */
+            margin: 5mm; 
         }
 
         :root {
@@ -19,7 +19,7 @@
 
         body {
             font-family: 'Nunito', 'Comic Sans MS', cursive, sans-serif;
-            background-color: #fff; /* Çıktı için beyaz arka plan */
+            background-color: #fff; 
             color: var(--text-color);
             margin: 0;
             padding: 5px 10px;
@@ -30,8 +30,13 @@
 
         .container {
             width: 100%;
-            max-width: 100%; /* Sınır kaldırıldı, tüm genişliği kaplasın */
+            max-width: 100%; 
             background-color: #fff;
+        }
+
+        /* Her bir sayfanın kapsayıcısı */
+        .page-section {
+            margin-bottom: 40px;
         }
 
         .header {
@@ -39,20 +44,11 @@
             margin-bottom: 15px;
         }
 
-        .header h1 {
-            color: #ff6b81;
-            font-size: 32px;
-            font-weight: 900;
-            margin: 0 0 10px 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
         .user-info {
             display: flex;
             justify-content: center;
             gap: 40px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 18px;
             font-weight: bold;
             color: #576574;
@@ -65,6 +61,16 @@
             min-width: 180px;
         }
 
+        .part-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #ff6b81;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -74,7 +80,7 @@
         th {
             color: #576574;
             font-weight: 900;
-            font-size: 15px;
+            font-size: 16px;
             padding: 8px 2px;
             text-align: center;
             border-bottom: 2px solid #dfe4ea;
@@ -84,88 +90,82 @@
             text-align: left;
             padding-left: 15px;
             font-size: 16px;
-            color: #333; /* Siyah-beyaz çıktı için koyu renk */
+            color: #333; 
         }
 
         td {
             text-align: center;
             vertical-align: middle;
             padding: 8px 0; 
-            position: relative; /* Çizgilerin düzgün hizalanması için eklendi */
+            position: relative; 
             z-index: 1;
         }
 
-        /* Satır yüksekliği - Sayfayı daha iyi kaplaması için daha da genişletildi */
         tr.task-row {
             height: 85px; 
         }
 
-        /* Boyama Kitabı Tarzı Başlıklar (İçi beyaz, dışı siyah çerçeve) */
         .task-name {
             font-weight: bold;
-            font-size: 16px; /* Biraz daha büyütüldü */
+            font-size: 16px; 
             text-align: left;
             padding: 12px 10px;
             border-radius: 12px;
-            color: #333; /* Siyah/Koyu Gri Yazı */
-            background-color: #fff; /* İçi Bembeyaz - Boyamaya Hazır! */
-            border: 2px dashed #777; /* Boyama kitabı hissiyatı için kesik çizgili gri çerçeve */
+            color: #333; 
+            background-color: #fff; 
+            border: 2px dashed #777; 
             white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 6px;
-            width: 180px;
+            width: 190px;
         }
 
-        /* Boyama Şekilleri İçin Hücre */
         .day-cell {
-            width: 44px; /* Simgeler ÇOK DAHA BÜYÜTÜLDÜ */
+            width: 44px; 
             height: 44px;
             display: inline-block;
             position: relative;
             z-index: 2;
         }
 
-        /* Namaz görevi yuvarlağı içindeki 5 bölmenin kolay boyanması için DEVASA yapıldı */
+        /* Namaz görevi devasa boyutu */
         .task-row[data-shape="namaz"] .day-cell {
-            width: 72px; /* Devasa Boyut - Neredeyse iki katı büyüklükte */
+            width: 72px; 
             height: 72px;
         }
 
-        /* Şekillerin (SVG) Boyama Özellikleri - Siyah/Beyaz çıktıya uygun */
         .day-cell svg {
             width: 100%;
             height: 100%;
-            fill: #fff; /* İçi beyaz - boyamaya hazır */
-            stroke: #444; /* Siyah/koyu gri dış hat */
-            stroke-width: 1.8; /* Boyut büyüdüğü için dış hat kalınlığı dengelendi */
+            fill: #fff; 
+            stroke: #444; 
+            stroke-width: 1.8; 
             stroke-linejoin: round;
             stroke-linecap: round;
             filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.06));
         }
 
-        /* Namaz yuvarlağı çok büyük olduğu için iç çizgileri kaba durmasın diye inceltildi */
         .task-row[data-shape="namaz"] .day-cell svg {
             stroke-width: 1.2;
         }
 
-        /* Zincir Bağlantı Çizgileri - Başlık hariç her hücrenin tam ortasından bir sonrakine */
+        /* Zincir Bağlantı Çizgileri */
         td:not(.task-name):not(:last-child)::after {
             content: '';
             position: absolute;
-            bottom: 22px; /* Normal simgelerin alt hizasından geçer */
-            left: 50%; /* Tam merkezden başla */
-            width: 100%; /* Bir sonraki merkeze kadar kusursuz uzanır */
-            height: 3px; /* Çizginin kalınlığı */
-            background-color: #666; /* Siyah/koyu gri çizgi */
+            bottom: 22px; 
+            left: 50%; 
+            width: 100%; 
+            height: 3px; 
+            background-color: #666; 
             border-radius: 2px; 
             z-index: -1; 
             opacity: 0.6; 
         }
 
-        /* Namaz yuvarlağı devasa boyutta olduğu için onun alt çizgisi daha da aşağıdan geçer */
         .task-row[data-shape="namaz"] td:not(.task-name):not(:last-child)::after {
-            bottom: 10px;
+            bottom: 10px; /* Namaz simgesi büyük olduğu için çizgisi alttan geçer */
         }
 
         /* YAZDIRMA (PRINT) ÖZEL AYARLARI */
@@ -177,9 +177,14 @@
             }
             .container { max-width: 100%; }
             .print-controls { display: none !important; }
+            
+            /* İkinci tablonun 2. sayfadan başlamasını sağlar */
+            .page-break { 
+                page-break-before: always; 
+                break-before: page; 
+            }
         }
 
-        /* Yazdırma Butonu Alanı */
         .print-controls {
             background-color: #f1f2f6;
             padding: 15px;
@@ -212,63 +217,46 @@
 <body>
 
     <div class="print-controls">
-        <button class="print-btn" onclick="window.print()">🖨️ Çıktı Al (Yazdır)</button>
+        <button class="print-btn" onclick="window.print()">🖨️ Çıktı Al (2 Sayfa Yazdırılır)</button>
         <div style="font-size: 13px; color: #576574;">
-            <strong>Yazdırma İpucu:</strong> Ayarlardan <strong>Yatay (Landscape)</strong> düzeni seçtiğinizden ve <br><strong>Arka Plan Grafikleri (Background graphics)</strong> seçeneğinin işaretli olduğundan emin olun.
+            <strong>Önemli:</strong> Simgeler devasa olduğu için tablo ikiye bölünmüştür. <br>
+            Ayarlardan <strong>Yatay (Landscape)</strong> düzeni seçin. Yazıcıdan 2 sayfa çıkacaktır, kağıtları yan yana asabilirsiniz!
         </div>
     </div>
 
     <div class="container">
-        <div class="header">
-            <div class="user-info">
-                <div>Adım: <span></span></div>
-                <div>Ay: <span></span></div>
+        
+        <!-- 1. BÖLÜM: 1-15 GÜNLER (1. SAYFA) -->
+        <div class="page-section">
+            <div class="header">
+                <div class="user-info">
+                    <div>Adım: <span></span></div>
+                    <div>Ay: <span></span></div>
+                </div>
             </div>
+            <div class="part-title">BÖLÜM 1 (Gün 1 - 15)</div>
+            <div id="table-part-1"></div>
         </div>
 
-        <table id="monthly-grid">
-            <thead>
-                <tr>
-                    <th class="empty-th">GÖREVLERİM</th>
-                    <!-- Gün başlıkları JS ile eklenecek -->
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Kişisel Görevler -->
-                <tr class="task-row" data-category="personal" data-shape="cloud">
-                    <td class="task-name">🛏️ Yatağımı Topladım</td>
-                </tr>
-                <tr class="task-row" data-category="personal" data-shape="star">
-                    <td class="task-name">👗 Dolabımı Düzenledim</td>
-                </tr>
-                <tr class="task-row" data-category="personal" data-shape="drop">
-                    <td class="task-name">🦷 Dişlerimi Fırçaladım</td>
-                </tr>
+        <!-- SAYFA KESMESİ (Yazdırırken buradan itibaren 2. kağıda geçer) -->
+        <div class="page-break"></div>
 
-                <!-- Akademik Görev -->
-                <tr class="task-row" data-category="academic" data-shape="heart">
-                    <td class="task-name">🇬🇧 İngilizce Çalıştım</td>
-                </tr>
-                <tr class="task-row" data-category="academic" data-shape="book">
-                    <td class="task-name">📚 Kitap Okudum</td>
-                </tr>
+        <!-- 2. BÖLÜM: 16-31 GÜNLER (2. SAYFA) -->
+        <div class="page-section">
+            <div class="header">
+                <div class="user-info">
+                    <div>Adım: <span></span></div>
+                    <div>Ay: <span></span></div>
+                </div>
+            </div>
+            <div class="part-title">BÖLÜM 2 (Gün 16 - 31)</div>
+            <div id="table-part-2"></div>
+        </div>
 
-                <!-- Manevi Görevler -->
-                <tr class="task-row" data-category="spiritual" data-shape="moon">
-                    <td class="task-name">📖 Kuran 1 Sayfa Okudum</td>
-                </tr>
-                <tr class="task-row" data-category="spiritual" data-shape="namaz">
-                    <td class="task-name">🤲 Namazımı Kıldım</td>
-                </tr>
-                <tr class="task-row" data-category="spiritual" data-shape="diamond">
-                    <td class="task-name">🧠 Ezber Tekrarı Yaptım</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
     <script>
-        // Şekillerin Çizim Kodları (SVG formatında)
+        // Şekillerin Çizim Kodları
         const shapes = {
             cloud: '<svg viewBox="0 0 24 24"><path d="M17.5 19c1.9 0 3.5-1.6 3.5-3.5 0-1.8-1.4-3.3-3.2-3.5-.1-2.5-2.2-4.5-4.8-4.5-1.9 0-3.6 1.1-4.4 2.7-.4-.1-.8-.2-1.1-.2-2.5 0-4.5 2-4.5 4.5 0 2.5 1.6 4.5 3.5 4.5h11z"/></svg>',
             star: '<svg viewBox="0 0 24 24"><polygon points="12,2 15,8.5 22,9 17,14 18.5,21 12,17.5 5.5,21 7,14 2,9 9,8.5"/></svg>',
@@ -280,31 +268,48 @@
             diamond: '<svg viewBox="0 0 24 24"><polygon points="12,2 22,10 12,22 2,10"/></svg>'
         };
 
-        // Tablo Başlıklarını (1'den 31'e kadar) Oluştur
-        const theadRow = document.querySelector("#monthly-grid thead tr");
-        for(let i=1; i<=31; i++) {
-            let th = document.createElement("th");
-            th.textContent = i;
-            theadRow.appendChild(th);
+        const tasks = [
+            { name: "🛏️ Yatağımı Topladım", category: "personal", shape: "cloud" },
+            { name: "👗 Dolabımı Düzenledim", category: "personal", shape: "star" },
+            { name: "🦷 Dişlerimi Fırçaladım", category: "personal", shape: "drop" },
+            { name: "🇬🇧 İngilizce Çalıştım", category: "academic", shape: "heart" },
+            { name: "📚 Kitap Okudum", category: "academic", shape: "book" },
+            { name: "📖 Kuran 1 Sayfa Okudum", category: "spiritual", shape: "moon" },
+            { name: "🤲 Namazımı Kıldım", category: "spiritual", shape: "namaz" },
+            { name: "🧠 Ezber Tekrarı Yaptım", category: "spiritual", shape: "diamond" }
+        ];
+
+        // Tabloyu oluşturan fonksiyon
+        function renderTable(startDay, endDay, containerId) {
+            let html = `<table><thead><tr><th class="empty-th">GÖREVLERİM</th>`;
+            
+            // Gün başlıkları
+            for(let i=startDay; i<=endDay; i++) {
+                html += `<th>${i}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+
+            // Satırlar ve Simgeler
+            tasks.forEach(task => {
+                html += `<tr class="task-row" data-category="${task.category}" data-shape="${task.shape}">`;
+                html += `<td class="task-name">${task.name}</td>`;
+                
+                for(let i=startDay; i<=endDay; i++) {
+                    html += `<td><div class="day-cell">${shapes[task.shape]}</div></td>`;
+                }
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table>`;
+            document.getElementById(containerId).innerHTML = html;
         }
 
-        // Tüm görev satırlarına kendi özel boyama şekillerini ekle
-        const taskRows = document.querySelectorAll(".task-row");
-        
-        taskRows.forEach(row => {
-            const shapeName = row.getAttribute("data-shape");
-            const svgIcon = shapes[shapeName];
+        // 1. Tabloyu Oluştur (1'den 15'e)
+        renderTable(1, 15, "table-part-1");
 
-            for(let i=1; i<=31; i++) {
-                let td = document.createElement("td");
-                let cell = document.createElement("div");
-                cell.className = "day-cell";
-                cell.innerHTML = svgIcon; // Özel simgeyi hücreye yerleştir
-                td.appendChild(cell);
-                row.appendChild(td);
-            }
-        });
+        // 2. Tabloyu Oluştur (16'dan 31'e)
+        renderTable(16, 31, "table-part-2");
+
     </script>
-
 </body>
 </html>
