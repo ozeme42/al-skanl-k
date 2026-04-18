@@ -10,7 +10,7 @@
         /* A4 Yatay Kağıt Ayarı */
         @page {
             size: A4 landscape;
-            margin: 10mm;
+            margin: 5mm; /* Sayfayı tam doldurması için kenar boşlukları iyice azaltıldı */
         }
 
         :root {
@@ -22,7 +22,7 @@
             background-color: #fff; /* Çıktı için beyaz arka plan */
             color: var(--text-color);
             margin: 0;
-            padding: 10px 20px;
+            padding: 5px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -30,7 +30,7 @@
 
         .container {
             width: 100%;
-            max-width: 1050px; /* A4 genişliğine uygun */
+            max-width: 100%; /* Sınır kaldırıldı, tüm genişliği kaplasın */
             background-color: #fff;
         }
 
@@ -90,21 +90,22 @@
         td {
             text-align: center;
             vertical-align: middle;
-            padding: 10px 0; /* Hücre boşlukları biraz artırıldı */
-            position: relative;
+            padding: 8px 0; 
+            position: relative; /* Çizgilerin düzgün hizalanması için eklendi */
+            z-index: 1;
         }
 
-        /* Satır yüksekliği - Sayfayı daha iyi kaplaması için genişletildi */
+        /* Satır yüksekliği - Sayfayı daha iyi kaplaması için daha da genişletildi */
         tr.task-row {
-            height: 75px; 
+            height: 85px; 
         }
 
         /* Boyama Kitabı Tarzı Başlıklar (İçi beyaz, dışı siyah çerçeve) */
         .task-name {
             font-weight: bold;
-            font-size: 15px; /* Biraz daha büyütüldü */
+            font-size: 16px; /* Biraz daha büyütüldü */
             text-align: left;
-            padding: 12px 15px;
+            padding: 12px 10px;
             border-radius: 12px;
             color: #333; /* Siyah/Koyu Gri Yazı */
             background-color: #fff; /* İçi Bembeyaz - Boyamaya Hazır! */
@@ -112,17 +113,23 @@
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 8px;
-            width: 190px;
+            gap: 6px;
+            width: 180px;
         }
 
         /* Boyama Şekilleri İçin Hücre */
         .day-cell {
-            width: 36px; /* 5 bölmeli yuvarlak daha rahat boyansın diye Tümü Biraz Daha Büyütüldü */
-            height: 36px;
+            width: 44px; /* Simgeler ÇOK DAHA BÜYÜTÜLDÜ */
+            height: 44px;
             display: inline-block;
             position: relative;
             z-index: 2;
+        }
+
+        /* Namaz görevi yuvarlağı içindeki 5 bölmenin kolay boyanması için DEVASA yapıldı */
+        .task-row[data-shape="namaz"] .day-cell {
+            width: 72px; /* Devasa Boyut - Neredeyse iki katı büyüklükte */
+            height: 72px;
         }
 
         /* Şekillerin (SVG) Boyama Özellikleri - Siyah/Beyaz çıktıya uygun */
@@ -131,19 +138,24 @@
             height: 100%;
             fill: #fff; /* İçi beyaz - boyamaya hazır */
             stroke: #444; /* Siyah/koyu gri dış hat */
-            stroke-width: 2; 
+            stroke-width: 1.8; /* Boyut büyüdüğü için dış hat kalınlığı dengelendi */
             stroke-linejoin: round;
             stroke-linecap: round;
             filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.06));
         }
 
-        /* Zincir Bağlantı Çizgileri - Siyah/Beyaz çıktıya uygun düz çizgi */
-        td:not(:last-child) .day-cell::after {
+        /* Namaz yuvarlağı çok büyük olduğu için iç çizgileri kaba durmasın diye inceltildi */
+        .task-row[data-shape="namaz"] .day-cell svg {
+            stroke-width: 1.2;
+        }
+
+        /* Zincir Bağlantı Çizgileri - Başlık hariç her hücrenin tam ortasından bir sonrakine */
+        td:not(.task-name):not(:last-child)::after {
             content: '';
             position: absolute;
-            bottom: 6px; /* Simgelerin hemen alt hizasından geçer */
-            left: 32px; /* Şeklin bittiği yerden başlar */
-            width: 14px; /* Bir sonraki şekle kadar uzanır */
+            bottom: 22px; /* Normal simgelerin alt hizasından geçer */
+            left: 50%; /* Tam merkezden başla */
+            width: 100%; /* Bir sonraki merkeze kadar kusursuz uzanır */
             height: 3px; /* Çizginin kalınlığı */
             background-color: #666; /* Siyah/koyu gri çizgi */
             border-radius: 2px; 
@@ -151,16 +163,9 @@
             opacity: 0.6; 
         }
 
-        .instructions {
-            background-color: #fff3cd;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #856404;
-            border: 2px dashed #ffeeba;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 10px;
+        /* Namaz yuvarlağı devasa boyutta olduğu için onun alt çizgisi daha da aşağıdan geçer */
+        .task-row[data-shape="namaz"] td:not(.task-name):not(:last-child)::after {
+            bottom: 10px;
         }
 
         /* YAZDIRMA (PRINT) ÖZEL AYARLARI */
@@ -260,10 +265,6 @@
                 </tr>
             </tbody>
         </table>
-
-        <div class="instructions">
-            🎨 <strong>Boyama Zamanı!</strong> Boya kalemlerini hazırla. Görevini bitirdiğinde o günün simgesini en sevdiğin renge boya. Simgeleri birbirine bağlayarak kırılmaz bir zincir oluştur!
-        </div>
     </div>
 
     <script>
@@ -275,7 +276,7 @@
             heart: '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
             book: '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
             moon: '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-            namaz: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="21.51" y2="8.91"/><line x1="12" y1="12" x2="17.88" y2="20.09"/><line x1="12" y1="12" x2="6.12" y2="20.09"/><line x1="12" y1="12" x2="2.49" y2="8.91"/></svg>',
+            namaz: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="2"/><line x1="12" y1="12" x2="21.51" y2="8.91"/><line x1="12" y1="12" x2="17.88" y2="20.09"/><line x1="12" y1="12" x2="6.12" y2="20.09"/><line x1="12" y1="12" x2="2.49" y2="8.91"/><text x="15.6" y="8.2" style="fill:#444; stroke:none; font-size:4.2px; font-weight:900; text-anchor:middle; font-family:sans-serif;">S</text><text x="18" y="15" style="fill:#444; stroke:none; font-size:4.2px; font-weight:900; text-anchor:middle; font-family:sans-serif;">Ö</text><text x="12" y="19.5" style="fill:#444; stroke:none; font-size:4.2px; font-weight:900; text-anchor:middle; font-family:sans-serif;">İ</text><text x="6" y="15" style="fill:#444; stroke:none; font-size:4.2px; font-weight:900; text-anchor:middle; font-family:sans-serif;">A</text><text x="8.4" y="8.2" style="fill:#444; stroke:none; font-size:4.2px; font-weight:900; text-anchor:middle; font-family:sans-serif;">Y</text></svg>',
             diamond: '<svg viewBox="0 0 24 24"><polygon points="12,2 22,10 12,22 2,10"/></svg>'
         };
 
