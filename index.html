@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aylık Eğlenceli Başarı Zinciri - Yazdırılabilir</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        /* A4 Yatay Kağıt Ayarı */
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        :root {
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Nunito', 'Comic Sans MS', cursive, sans-serif;
+            background-color: #fff; /* Çıktı için beyaz arka plan */
+            color: var(--text-color);
+            margin: 0;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1050px; /* A4 genişliğine uygun */
+            background-color: #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #ff6b81;
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #576574;
+        }
+
+        .user-info span {
+            border-bottom: 2px solid #a4b0be;
+            padding-bottom: 2px;
+            display: inline-block;
+            min-width: 180px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th {
+            color: #576574;
+            font-weight: 900;
+            font-size: 15px;
+            padding: 8px 2px;
+            text-align: center;
+            border-bottom: 2px solid #dfe4ea;
+        }
+
+        .empty-th {
+            text-align: left;
+            padding-left: 15px;
+            font-size: 16px;
+            color: #ff6b81;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .task-name {
+            font-weight: bold;
+            font-size: 14px;
+            text-align: left;
+            padding: 10px 15px;
+            border-radius: 12px;
+            color: #fff;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 180px;
+        }
+
+        /* Görev Kategorilerine Göre Renkler (Sadece İsimler Renkli, Çıktıda Güzel Durur) */
+        .task-row[data-category="personal"] .task-name { background-color: #ff9ff3; } /* Pembe */
+        .task-row[data-category="academic"] .task-name { background-color: #48dbfb; } /* Mavi */
+        .task-row[data-category="spiritual"] .task-name { background-color: #1dd1a1; } /* Yeşil */
+
+        /* Boyama Şekilleri İçin Hücre */
+        .day-cell {
+            width: 26px; /* Biraz büyütüldü, boyaması daha kolay ve şık */
+            height: 26px;
+            display: inline-block;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Şekillerin (SVG) Boyama Özellikleri */
+        .day-cell svg {
+            width: 100%;
+            height: 100%;
+            fill: #fff; /* İçi beyaz - boyamaya hazır */
+            stroke-width: 2; /* Daha zarif ve kibar bir dış hat */
+            stroke-linejoin: round;
+            stroke-linecap: round;
+            filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.06)); /* Zarif bir gölge */
+        }
+
+        /* Şekil Dış Hatlarını (Stroke) Kategorilere Göre Şık Renklere Ayırma */
+        .task-row[data-category="personal"] .day-cell svg { stroke: #f368e0; } 
+        .task-row[data-category="academic"] .day-cell svg { stroke: #0abde3; } 
+        .task-row[data-category="spiritual"] .day-cell svg { stroke: #10ac84; } 
+
+        /* Zincir Bağlantı Çizgileri - Alttan Düz Çizgi */
+        td:not(:last-child) .day-cell::after {
+            content: '';
+            position: absolute;
+            bottom: 4px; /* Simgelerin hemen alt hizasından geçer */
+            left: 22px; /* Şeklin bittiği yerden başlar */
+            width: 14px; /* Bir sonraki şekle kadar uzanır */
+            height: 3px; /* Çizginin kalınlığı */
+            border-radius: 2px; /* Uçları hafif yuvarlak daha yumuşak bir görünüm için */
+            z-index: -1; /* Ana şekillerin arkasında kalır */
+            opacity: 0.8; /* Boyama kağıdında zarif durması için */
+        }
+
+        /* Kategorilere Göre Çizgi Renkleri */
+        .task-row[data-category="personal"] td:not(:last-child) .day-cell::after {
+            background-color: #f368e0;
+        }
+        .task-row[data-category="academic"] td:not(:last-child) .day-cell::after {
+            background-color: #0abde3;
+        }
+        .task-row[data-category="spiritual"] td:not(:last-child) .day-cell::after {
+            background-color: #10ac84;
+        }
+
+        .instructions {
+            background-color: #fff3cd;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #856404;
+            border: 2px dashed #ffeeba;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* YAZDIRMA (PRINT) ÖZEL AYARLARI */
+        @media print {
+            body { 
+                padding: 0; 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important;
+            }
+            .container { max-width: 100%; }
+            .print-controls { display: none !important; }
+        }
+
+        /* Yazdırma Butonu Alanı */
+        .print-controls {
+            background-color: #f1f2f6;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px dashed #a4b0be;
+            width: 100%;
+            max-width: 1050px;
+        }
+
+        .print-btn {
+            background-color: #ff6b81;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+        }
+
+        .print-btn:hover {
+            background-color: #ff4757;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-controls">
+        <button class="print-btn" onclick="window.print()">🖨️ Çıktı Al (Yazdır)</button>
+        <div style="font-size: 13px; color: #576574;">
+            <strong>Yazdırma İpucu:</strong> Ayarlardan <strong>Yatay (Landscape)</strong> düzeni seçtiğinizden ve <br><strong>Arka Plan Grafikleri (Background graphics)</strong> seçeneğinin işaretli olduğundan emin olun.
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🦄 SÜPER KAHRAMANIN BAŞARI ZİNCİRİ 🦄</h1>
+            <div class="user-info">
+                <div>Adım: <span></span></div>
+                <div>Ay: <span></span></div>
+            </div>
+        </div>
+
+        <table id="monthly-grid">
+            <thead>
+                <tr>
+                    <th class="empty-th">GÖREVLERİM</th>
+                    <!-- Gün başlıkları JS ile eklenecek -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Kişisel Görevler -->
+                <tr class="task-row" data-category="personal" data-shape="cloud">
+                    <td class="task-name">🛏️ Yatağımı Topladım</td>
+                </tr>
+                <tr class="task-row" data-category="personal" data-shape="star">
+                    <td class="task-name">👗 Dolabımı Düzenledim</td>
+                </tr>
+                <tr class="task-row" data-category="personal" data-shape="drop">
+                    <td class="task-name">🦷 Dişlerimi Fırçaladım</td>
+                </tr>
+
+                <!-- Akademik Görev -->
+                <tr class="task-row" data-category="academic" data-shape="heart">
+                    <td class="task-name">🇬🇧 İngilizce Okudum</td>
+                </tr>
+
+                <!-- Manevi Görevler -->
+                <tr class="task-row" data-category="spiritual" data-shape="moon">
+                    <td class="task-name">📖 Kuran / Cüz Okudum</td>
+                </tr>
+                <tr class="task-row" data-category="spiritual" data-shape="sun">
+                    <td class="task-name">🤲 Namazımı Kıldım</td>
+                </tr>
+                <tr class="task-row" data-category="spiritual" data-shape="diamond">
+                    <td class="task-name">🧠 Ezber Tekrarı Yaptım</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="instructions">
+            🎨 <strong>Boyama Zamanı!</strong> Boya kalemlerini hazırla. Görevini bitirdiğinde o günün simgesini en sevdiğin renge boya. Simgeleri birbirine bağlayarak kırılmaz bir zincir oluştur!
+        </div>
+    </div>
+
+    <script>
+        // Şekillerin Çizim Kodları (SVG formatında)
+        const shapes = {
+            cloud: '<svg viewBox="0 0 24 24"><path d="M17.5 19c1.9 0 3.5-1.6 3.5-3.5 0-1.8-1.4-3.3-3.2-3.5-.1-2.5-2.2-4.5-4.8-4.5-1.9 0-3.6 1.1-4.4 2.7-.4-.1-.8-.2-1.1-.2-2.5 0-4.5 2-4.5 4.5 0 2.5 1.6 4.5 3.5 4.5h11z"/></svg>',
+            star: '<svg viewBox="0 0 24 24"><polygon points="12,2 15,8.5 22,9 17,14 18.5,21 12,17.5 5.5,21 7,14 2,9 9,8.5"/></svg>',
+            drop: '<svg viewBox="0 0 24 24"><path d="M12 21.5c-4.14 0-7.5-3.36-7.5-7.5 0-4.14 7.5-11.5 7.5-11.5s7.5 7.36 7.5 11.5c0 4.14-3.36 7.5-7.5 7.5z"/></svg>',
+            heart: '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+            moon: '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+            sun: '<svg viewBox="0 0 24 24"><path d="M12 2L14.4 6.8L19.5 6.3L17.6 11L21 15.2L16 17L15.3 22L10.8 19.4L6 21L6.7 16L1.5 13.8L5.2 9.8L3 5L8.2 6.2L12 2Z"/></svg>',
+            diamond: '<svg viewBox="0 0 24 24"><polygon points="12,2 22,10 12,22 2,10"/></svg>'
+        };
+
+        // Tablo Başlıklarını (1'den 31'e kadar) Oluştur
+        const theadRow = document.querySelector("#monthly-grid thead tr");
+        for(let i=1; i<=31; i++) {
+            let th = document.createElement("th");
+            th.textContent = i;
+            theadRow.appendChild(th);
+        }
+
+        // Tüm görev satırlarına kendi özel boyama şekillerini ekle
+        const taskRows = document.querySelectorAll(".task-row");
+        
+        taskRows.forEach(row => {
+            const shapeName = row.getAttribute("data-shape");
+            const svgIcon = shapes[shapeName];
+
+            for(let i=1; i<=31; i++) {
+                let td = document.createElement("td");
+                let cell = document.createElement("div");
+                cell.className = "day-cell";
+                cell.innerHTML = svgIcon; // Özel simgeyi hücreye yerleştir
+                td.appendChild(cell);
+                row.appendChild(td);
+            }
+        });
+    </script>
+
+</body>
+</html>
