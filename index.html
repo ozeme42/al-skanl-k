@@ -134,6 +134,12 @@
             height: 65px;
         }
 
+        /* Ödev Kalemi devasa boyutu (boyaması çok daha rahat) */
+        .task-row[data-shape="pencil"] .day-cell {
+            width: 55px; 
+            height: 55px;
+        }
+
         .day-cell svg {
             width: 100%;
             height: 100%;
@@ -147,6 +153,11 @@
 
         .task-row[data-shape="namaz"] .day-cell svg {
             stroke-width: 1.1;
+        }
+
+        /* Kalem simgesi için dış hat kalınlığı ayarı */
+        .task-row[data-shape="pencil"] .day-cell svg {
+            stroke-width: 1.3;
         }
 
         /* Zincir Bağlantı Çizgileri */
@@ -165,6 +176,11 @@
 
         .task-row[data-shape="namaz"] td:not(.task-name):not(:last-child)::after {
             bottom: 8px;
+        }
+
+        /* Kalem zinciri için alt bağlantı hizası */
+        .task-row[data-shape="pencil"] td:not(.task-name):not(:last-child)::after {
+            bottom: 12px;
         }
 
         @media print {
@@ -213,6 +229,19 @@
         <div style="font-size: 13px; color: #576574;">
             <strong>Adım:</strong> Dosyayı açın, "Yazdır"a basın, <strong>Yatay</strong> düzeni seçin ve 2 sayfayı da alın.
         </div>
+        .print-btn:hover {
+            background-color: #ff4757;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-controls">
+        <button class="print-btn" onclick="window.print()">🖨️ Çıktı Al (Nisan Özel - 1 Sayfa)</button>
+        <div style="font-size: 13px; color: #576574;">
+            <strong>Bilgi:</strong> 19-30 Nisan (12 gün) olduğu için tüm simgeler devasa boyutta kalarak <strong>tek sayfaya</strong> sığdırıldı.<br>
+            Yazdırırken <strong>Yatay</strong> düzeni seçmeyi unutmayın!
+        </div>
     </div>
 
     <div class="container">
@@ -221,24 +250,11 @@
             <div class="header">
                 <div class="user-info">
                     <div>Adım: <span></span></div>
-                    <div>Ay: <span></span></div>
+                    <div>Ay: <span style="color: #ff6b81; border-bottom: none; font-size: 20px;">NİSAN</span></div>
                 </div>
             </div>
-            <div class="part-title">BÖLÜM 1 (Gün 1 - 15)</div>
+            <div class="part-title">19 NİSAN - 30 NİSAN ZİNCİRİ</div>
             <div id="table-part-1"></div>
-        </div>
-
-        <div class="page-break"></div>
-
-        <div class="page-section">
-            <div class="header">
-                <div class="user-info">
-                    <div>Adım: <span></span></div>
-                    <div>Ay: <span></span></div>
-                </div>
-            </div>
-            <div class="part-title">BÖLÜM 2 (Gün 16 - 31)</div>
-            <div id="table-part-2"></div>
         </div>
 
     </div>
@@ -284,8 +300,8 @@
             document.getElementById(containerId).innerHTML = html;
         }
 
-        renderTable(1, 15, "table-part-1");
-        renderTable(16, 31, "table-part-2");
+        // Sadece 19 Nisan'dan 30 Nisan'a kadar (12 gün) tek bir tablo render ediliyor
+        renderTable(19, 30, "table-part-1");
     </script>
 </body>
 </html>
